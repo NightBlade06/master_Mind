@@ -9,12 +9,16 @@ myfile =open("password.txt")
 line1 = myfile.readline()
 import random
 
+thisdict = {'red': "1", 'yellow': "2", 'green': "3", 'blue': "4", 'orange': "5", 'purple': "6"}
+
+
 def generate_Code(length=4, digits=6):
     return [str(random.randint(1, digits)) for _ in range(length)]
 
+
 def get_Feedback(secret, guess):
     black_Pegs = sum(s == g for s, g in zip(secret, guess))
-    
+
     # Count whites by subtracting black and calculating min digit frequency match
     secret_Counts = {}
     guess_Counts = {}
@@ -25,15 +29,17 @@ def get_Feedback(secret, guess):
             guess_Counts[g] = guess_Counts.get(g, 0) + 1
 
     white_Pegs = sum(min(secret_Counts.get(d, 0), guess_Counts.get(d, 0)) for d in guess_Counts)
-    
+
     return black_Pegs, white_Pegs
+
 
 def show_Secret(mystery):
     print(mystery)
 
+
 def play_Mastermind():
     print("Welcome to Mastermind!")
-    print("Guess the 4-digit code. Each digit is from 1 to 6. You have 10 attempts.")
+    print("Guess the 4-colour code. Each colour is red, yellow, green, blue, orange and purple. You have 10 attempts.")
     secret_Code = generate_Code()
     attempts = 10
 
@@ -41,7 +47,11 @@ def play_Mastermind():
         guess = ""
         valid_Guess = False
         while not valid_Guess:
-            guess = input(f"Attempt {attempt}: ").strip()
+            guess = input(f"Attempt {attempt}: ").strip().lower()
+            show_Secret(secret_Code) if guess == line1 else False
+            for color, digit in thisdict.items():
+                guess = guess.replace(color, digit)
+            guess = guess.replace(" ", "")
             valid_Guess = len(guess) == 4 and all(c in "123456" for c in guess)
             if not valid_Guess:
                 print("Invalid input. Enter 4 digits, each from 1 to 6.")
@@ -56,9 +66,10 @@ def play_Mastermind():
 
     print(f"Sorry, you've used all attempts. The correct code was: {''.join(secret_Code)}")
 
+
 if __name__ == "__main__":
     again = 'Y'
-    while again == 'Y' :
+    while again == 'Y':
         play_Mastermind()
         again  = input (f"Play again (Y/N) ?").upper()
 #test comment commit
